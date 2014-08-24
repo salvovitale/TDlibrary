@@ -26,8 +26,12 @@ int main(int argc, char *argv[]) {
 	vw->SetTDState_PT(P,T);
 	id->SetTDState_PT(P,T);
 
+
 	double h_vw = vw->GetStaticEnergy() + vw->GetPressure()/vw->GetDensity();
 	double h_id = id->GetStaticEnergy() + id->GetPressure()/id->GetDensity();
+
+	cout << "h, s, rho for Van der Waals " << h_vw << " " << vw->GetEntropy()<< " " << vw->GetDensity() <<endl;
+	cout << "h, s, rho  for Ideal Gas " << h_id << " " << id->GetEntropy()<< " " << id->GetDensity()<< endl;
 
 	vw->SetTDState_hs(h_vw, vw->GetEntropy());
 	id->SetTDState_hs(h_id,id->GetEntropy() );

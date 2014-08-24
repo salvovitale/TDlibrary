@@ -58,71 +58,104 @@ void CVanDerWaalsGas::SetTDState_rhoe (double rho, double e ) {
 
 }
 
+
 void CVanDerWaalsGas::SetTDState_PT (double P, double T ) {
 	double v1;
     double v2;
+//    double a1, b1, c1, d1;
+//    double alpha, beta;
+//    double z1, z2;
+    int success;
     double vtmp;
     double f1, f2, ftmp;
-    double FACTOR = 1.6;
-    int NTRY = 50, j;
+//    double FACTOR = 1.6;
+//    int NTRY = 50, j;
 
-	double toll = 1e-4;
+//	double toll = 1e-4;
+//
+//	v1 = T*Gas_Constant/P;
+//	v2 = v1 *(1 + toll);
+//
+//
+//    f1 = P*pow(v1,3) - (P*b + Gas_Constant*T) * pow(v1, 2) +a * v1 -a*b;
+//
+//    f2 = P*pow(v2,3) - (P*b + Gas_Constant*T) * pow(v2, 2) +a * v2 -a*b;
+//
+//    for (j=0;j<=NTRY;j++)
+//    {
+//        if (f1*f2 < 0.0) break;
+//
+//        if (fabs(f1) < fabs(f2))
+//        {
+//            v1 += FACTOR*(v1-v2);
+//            f1 = P*pow(v1,3) - (P*b + Gas_Constant*T) * pow(v1, 2) +a * v1 -a*b;
+//        }
+//        else
+//        {
+//            v2 += FACTOR*(v2-v1);
+//            f2 = P*pow(v2,3) - (P*b + Gas_Constant*T) * pow(v2, 2) +a * v2 -a*b;
+//        }
+//    }
+//
+//
+//    if (f1*f2 >= 0.0)
+//    {
+//        cout << "Warning! Bracketing in Van Der Waals Fluid model failed\n";
+//    }
+//    else
+//    {
+//        /// Bisection method
+//        while (fabs((v1-v2)/v1) > toll )
+//        {
+//            vtmp = (v1+v2) / 2;
+//            ftmp = P*pow(vtmp,3) - (P*b + Gas_Constant*T) * pow(vtmp, 2) +a * vtmp -a*b;
+//
+//            if (ftmp*f1 > 0)
+//            {
+//                v1 = vtmp;
+//                f1 = ftmp;
+//            }
+//            else
+//            {
+//                v2 = vtmp;
+//                f2 = ftmp;
+//            }
+//        }
+//    }
+//
+//    Density = 1/(0.5*(v1 + v2));
+//
+//    double e = T*Gas_Constant/Gamma_Minus_One - a*Density;
 
-	v1 = T*Gas_Constant/P;
-	v2 = v1 *(1 + toll);
+//    a1= P;
+//    b1= P*b- Gas_Constant*T;
+//    c1= a;
+//    d1= a*b;
+//    alpha= c1/a1 - b1*b1/(3*a1*a1);
+//    beta= 2*b1*b1*b1/(27*a1*a1*a1)- c1*b1/(3*a1*a1) + d1/a1;
+//
+//    z1= (-beta + sqrt(beta*beta + 4*alpha*alpha*alpha/27))/2;
+//    z2= (-beta - sqrt(beta*beta + 4*alpha*alpha*alpha/27))/2;
+//    if( z1 < 0.0 or z2 < 0.0){
+//
+//    }
+//    cout << (beta*beta + 4*alpha*alpha*alpha/27) <<  " " << z2 << endl;
+//
+//    v1= pow(z1,1/3) + pow(z2, 1/3) -b1/(3*a1);
 
+    v1 = T*Gas_Constant/P;
+    v2 = v1 *(1 +0.01);
+    success= zbrac(CubicInVolume, &v1, &v2);
 
-    f1 = P*pow(v1,3) - (P*b + Gas_Constant*T) * pow(v1, 2) +a * v1 -a*b;
-
-    f2 = P*pow(v2,3) - (P*b + Gas_Constant*T) * pow(v2, 2) +a * v2 -a*b;
-
-    for (j=0;j<=NTRY;j++)
-    {
-        if (f1*f2 < 0.0) break;
-
-        if (fabs(f1) < fabs(f2))
-        {
-            v1 += FACTOR*(v1-v2);
-            f1 = P*pow(v1,3) - (P*b + Gas_Constant*T) * pow(v1, 2) +a * v1 -a*b;
-        }
-        else
-        {
-            v2 += FACTOR*(v2-v1);
-            f2 = P*pow(v2,3) - (P*b + Gas_Constant*T) * pow(v2, 2) +a * v2 -a*b;
-        }
-    }
-
-
-    if (f1*f2 >= 0.0)
-    {
-        cout << "Warning! Bracketing in Van Der Waals Fluid model failed\n";
-    }
-    else
-    {
-        /// Bisection method
-        while (fabs((v1-v2)/v1) > toll )
-        {
-            vtmp = (v1+v2) / 2;
-            ftmp = P*pow(vtmp,3) - (P*b + Gas_Constant*T) * pow(vtmp, 2) +a * vtmp -a*b;
-
-            if (ftmp*f1 > 0)
-            {
-                v1 = vtmp;
-                f1 = ftmp;
-            }
-            else
-            {
-                v2 = vtmp;
-                f2 = ftmp;
-            }
-        }
-    }
-
-    Density = 1/(0.5*(v1 + v2));
-
+    Density= 1/v1;
+    cout << Density << endl;
     double e = T*Gas_Constant/Gamma_Minus_One - a*Density;
-
 	SetTDState_rhoe(Density, e);
+
+}
+
+double CVanDerWaalsGas::CubicInVolume(const double v){
+	return Pressure*(v-b)*v*v - Gas_Constant*Temperature*v*v- a*(v-b);
 
 }
 
