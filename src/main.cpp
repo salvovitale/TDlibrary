@@ -39,8 +39,8 @@ int main(int argc, char *argv[]) {
 	cout << "h, s, rho,  P, T  for Ideal Gas " << h_id << " " << id->GetEntropy()<< " " << id->GetDensity()<<" " << id->GetPressure()<<" " << id->GetTemperature()<< endl;
 	cout << "h, s, rho,  P, T  for Peng Robinson " << h_pr << " " << pr->GetEntropy() << " " << pr->GetDensity()<<" " << pr->GetPressure()<<" " << pr->GetTemperature()<< endl;
 
-	vw->SetTDState_hs(h_vw, vw->GetEntropy());
-	id->SetTDState_hs(h_id,id->GetEntropy() );
+	vw->SetTDState_hs(1.1*h_vw, vw->GetEntropy());
+	id->SetTDState_hs(1.1*h_id, id->GetEntropy());
 
 	cout << "P, T for Van der Waals " << vw->GetPressure() << " " << vw->GetTemperature()<< endl;
 	cout << "P, T for Ideal Gas " << id->GetPressure() << " " << id->GetTemperature()<< endl;

@@ -107,6 +107,8 @@ void CPengRobinson::SetTDState_rhoe (double rho, double e ) {
 void CPengRobinson::SetTDState_PT (double P, double T ) {
 	double toll= 1e-4;
 	double A, B, Z, DZ, F, F1;
+	double rho, fv, e;
+	double sqrt2=sqrt(2);
 	A= a*alpha2(T)*P/(T*Gas_Constant)/(T*Gas_Constant);
 	B= b*P/(T*Gas_Constant);
 
@@ -118,10 +120,12 @@ void CPengRobinson::SetTDState_PT (double P, double T ) {
 		DZ = F/F1;
 		Z-= DZ;
 	}while(DZ>toll);
-	Density = P/(Z*Gas_Constant*T);
 
-    double e = T*Gas_Constant/Gamma_Minus_One - a*Density;
-	SetTDState_rhoe(Density, e);
+	rho= P/(Z*Gas_Constant*T);
+	fv = atanh( rho * b * sqrt2/(1 + rho*b));
+
+    e = T*Gas_Constant/Gamma_Minus_One + a*k*(k+1)*fv/(b*sqrt2*sqrt(TstarCrit))*sqrt(T) - a*(k+1)*(k+1)*fv/(b*sqrt2);
+	SetTDState_rhoe(rho, e);
 }
 
 void CPengRobinson::SetTDState_Prho (double P, double rho ) {
@@ -134,7 +138,37 @@ void CPengRobinson::SetTDState_Prho (double P, double rho ) {
 
 void CPengRobinson::SetTDState_hs (double h, double s ){
 
-/// WARNING TODO
+//    double rho, T, Z, dv, f, f1;
+//    double A, B, C, sqrt2=sqrt(2), fv;
+//    rho =1/Density;
+//    Z=1.01;
+//
+//    fv = atanh( rho * b * sqrt2/(1 + rho*b));
+//    A = Gas_Constant / Gamma_Minus_One ;
+//    B = a*k*(k+1)*fv/(b*sqrt2*sqrt(TstarCrit));
+//    C = - a*(k+1)*(k+1)*fv/(b*sqrt2) - e;
+//
+//
+//    T = h*Gamma_Minus_One/Gamma/Gas_Constant;
+//
+//	double toll = 1e-4;
+//
+//	v = 1.1*T*Gas_Constant/Pressure;
+//	do{
+//		cout << T <<" "<< 1/v <<endl;
+//		getchar();
+//		f=  log(v-b) - s/Gas_Constant + log(T)/Gamma_Minus_One;
+//		f1= 1/(v-b);
+//		dv= f/f1;
+//		v-= dv;
+//		T= (h+ 2*a/v)/Gas_Constant/(1/Gamma_Minus_One+ v/(v-b));
+//	}while(dv > toll);
+//
+//	Density = 1/v;
+//	Temperature = T;
+//    Pressure = Gas_Constant*Temperature*Density / (1 - Density*b) - a*Density*Density;
+//
+//    SetTDState_Prho(Pressure, Density);
 
 }
 
