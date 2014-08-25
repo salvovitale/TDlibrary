@@ -41,8 +41,6 @@ CPengRobinson::CPengRobinson(double gamma, double R, double Pstar, double Tstar,
         else
         k = 0.379642 + 1.48503 * w - 0.164423 * w*w + 0.016666 * w*w*w;
 
-//	a= 0.0;
-//	b =0.0;
 
 }
 
@@ -92,10 +90,12 @@ void CPengRobinson::SetTDState_rhoe (double rho, double e ) {
     SoundSpeed2 = dPdrho_e + Pressure/(Density*Density)*dPde_rho;
 
     dTde_rho = 1/Cv;
-    //DTDd_e = Gamma_Minus_One/Gas_Constant*a;
 
-    //DvDT_p = - DpDT_v / DpDv_T;
 
+//DTDd_e = Gamma_Minus_One/Gas_Constant*a;
+//
+//DvDT_p = - DpDT_v / DpDv_T;
+//
 //    Cv = Gas_Constant/Gamma_Minus_One - a_c/Covolume/sqrt2 * ( 2* sqrt(alpha2) * B +k*B*sqrt(T) + 0.5*k*\sqrt(T)*Crit_Temperature ) * fv; /// R
 //
 //    Cp = Cv -T*Crit_Temperature * pow(DpDT_v, 2) / DpDv_T;
@@ -105,43 +105,23 @@ void CPengRobinson::SetTDState_rhoe (double rho, double e ) {
 }
 
 void CPengRobinson::SetTDState_PT (double P, double T ) {
-//
-//    /// T E P MUST BE Tr e Pr
-//
-//	double a1;
-//	double a2;
-//	double a3;
-//	double A, B;
-//	double alpha;
-//	double* root  = new double [3];
-//	double rho;
-//	double ad;
-//	double e;
-//
-//	alpha = pow(  ( 1 + k*(1 - sqrt(T)) ) , 2)
-//    Mol_Attraction = a_c * alpha;
-//
-//	A = Mol_Attraction*P/pow(T * Gas_Constant, 2);
-//	B = Covolume*P/(T* Gas_Constant);
-//
-//	a1 = - ( 1 - B );
-//	a2 =   ( A - 3*B -2*B );
-//	a3 = - ( A*B -B*B - B*B*B );
-//
-//	poly_solve_cubic(a1, a2, a3, root);
-//
-//    // check the root of the polynomial
-//
-//	rho = P / ( root[2]*T*Gas_Constant ) * Crit_Density;
-//
-//    ad = a_c/Covolume/sqrt(2) * k*k * atanh( rho * Covolume * sqrt(2)/(1 + rho*Covolume) ) ;
-//    ad *= (1 + 2*k + k*k) + (3*k - 1) * k *sqrt(T);
-//    e = T*Crit_Temperature*Gas_Constant / Gamma_Minus_One - ad;
-//
-//	SetTDState_de(rho, e);
-//
-//	delete [] root;
-//
+	double toll= 1e-4;
+	double A, B, Z, DZ, F, F1;
+	A= a*alpha2(T)*P/(T*Gas_Constant)/(T*Gas_Constant);
+	B= b*P/(T*Gas_Constant);
+
+    Z= max(B, 1.01);
+	DZ= 1.0;
+	do{
+		F = Z*Z*Z + Z*Z*(B - 1.0) + Z*(A - 2*B - 3*B*B)  + (B*B*B + B*B - A*B);
+		F1 = 3*Z*Z + 2*Z*(B - 1.0) + (A - 2*B - 3*B*B);
+		DZ = F/F1;
+		Z-= DZ;
+	}while(DZ>toll);
+	Density = P/(Z*Gas_Constant*T);
+
+    double e = T*Gas_Constant/Gamma_Minus_One - a*Density;
+	SetTDState_rhoe(Density, e);
 }
 
 void CPengRobinson::SetTDState_Prho (double P, double rho ) {
