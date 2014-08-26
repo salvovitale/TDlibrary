@@ -90,20 +90,17 @@ void CVanDerWaalsGas::SetTDState_Prho (double P, double rho ) {
 void CVanDerWaalsGas::SetTDState_hs (double h, double s ){
 
     double v, T, dv, f, f1;
-    T = h*Gamma_Minus_One/Gamma/Gas_Constant;
+    double toll = 1e-4;
 
-	double toll = 1e-4;
-
-	v = 1.1*T*Gas_Constant/Pressure;
+    T = h*Gamma_Minus_One/Gas_Constant/Gamma;
+    v = exp(-1/Gamma_Minus_One*log(T) + s/Gas_Constant);
 	do{
-		cout << T <<" "<< 1/v <<endl;
-		getchar();
 		f=  log(v-b) - s/Gas_Constant + log(T)/Gamma_Minus_One;
 		f1= 1/(v-b);
 		dv= f/f1;
 		v-= dv;
 		T= (h+ 2*a/v)/Gas_Constant/(1/Gamma_Minus_One+ v/(v-b));
-	}while(dv > toll);
+	}while(abs(dv) > toll);
 
 	Density = 1/v;
 	Temperature = T;

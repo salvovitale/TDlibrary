@@ -52,13 +52,15 @@ int main(int argc, char *argv[]) {
 	cout << "h, s, rho,  P, T  for Peng Robinson " << h_pr << " " << pr->GetEntropy() << " " << pr->GetDensity()<<" " << pr->GetPressure()<<" " << pr->GetTemperature()<< endl;
 	cout << "h, s, rho,  P, T  for FluidProp " << h_flp << " " << flp->GetEntropy() << " " << flp->GetDensity()<<" " << flp->GetPressure()<<" " << flp->GetTemperature()<< endl;
 
-	vw->SetTDState_hs(1.1*h_vw, vw->GetEntropy());
-	id->SetTDState_hs(1.1*h_id, id->GetEntropy());
+	vw->SetTDState_hs(3*h_vw, 1.0*vw->GetEntropy());
+	id->SetTDState_hs(3*h_id, 1.0*id->GetEntropy());
+	pr->SetTDState_hs(3*h_pr, 1.0*pr->GetEntropy());
 
 	cout << "P, T for Van der Waals " << vw->GetPressure() << " " << vw->GetTemperature()<< endl;
 	cout << "P, T for Ideal Gas " << id->GetPressure() << " " << id->GetTemperature()<< endl;
+	cout << "P, T for for Peng Robinson " << pr->GetPressure() << " " << pr->GetTemperature()<< endl;
 	cout <<"-------------------------Hello World------------------------" << endl;
-	getchar();
+
 
 }
 
