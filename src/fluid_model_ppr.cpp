@@ -72,6 +72,8 @@ void CPengRobinson::SetTDState_rhoe (double rho, double e ) {
 
     Pressure = rho*Temperature*Gas_Constant / (1 - rho*b) - a*alpha2(Temperature) / ( 1/rho/rho + 2*b/rho - b*b );
 
+    Entropy = A*log(Temperature) + Gas_Constant*log(1/Density -b) - a*sqrt(alpha2(Temperature)) *k*fv/(b*sqrt2*sqrt(Temperature*TstarCrit));
+
     A = (1/rho/rho + 2*b/rho - b*b);
     B = - 0.5*k/sqrt(Temperature*TstarCrit); //(D alpha / DT)
 
@@ -138,37 +140,33 @@ void CPengRobinson::SetTDState_Prho (double P, double rho ) {
 
 void CPengRobinson::SetTDState_hs (double h, double s ){
 
-//    double rho, T, Z, dv, f, f1;
-//    double A, B, C, sqrt2=sqrt(2), fv;
-//    rho =1/Density;
-//    Z=1.01;
-//
-//    fv = atanh( rho * b * sqrt2/(1 + rho*b));
-//    A = Gas_Constant / Gamma_Minus_One ;
-//    B = a*k*(k+1)*fv/(b*sqrt2*sqrt(TstarCrit));
-//    C = - a*(k+1)*(k+1)*fv/(b*sqrt2) - e;
-//
-//
-//    T = h*Gamma_Minus_One/Gamma/Gas_Constant;
-//
-//	double toll = 1e-4;
-//
-//	v = 1.1*T*Gas_Constant/Pressure;
-//	do{
-//		cout << T <<" "<< 1/v <<endl;
-//		getchar();
-//		f=  log(v-b) - s/Gas_Constant + log(T)/Gamma_Minus_One;
-//		f1= 1/(v-b);
-//		dv= f/f1;
-//		v-= dv;
-//		T= (h+ 2*a/v)/Gas_Constant/(1/Gamma_Minus_One+ v/(v-b));
-//	}while(dv > toll);
-//
-//	Density = 1/v;
-//	Temperature = T;
-//    Pressure = Gas_Constant*Temperature*Density / (1 - Density*b) - a*Density*Density;
-//
-//    SetTDState_Prho(Pressure, Density);
+	double fv, A, B, C, sqrt2=sqrt(2);
+	double f, f1, v;
+	double dv = 1.0;
+	double toll =1e-4;
+	do{
+
+		v= 1/Density;
+		fv = atanh( Density * b * sqrt2/(1 + Density*b));
+		A = Gas_Constant / Gamma_Minus_One;
+		B = a*k*(k+1)*fv/(b*sqrt2*sqrt(TstarCrit));
+		C = - a*(k+1)*(k+1)*fv/(b*sqrt2) - h + Pressure/Density;
+		Temperature = ( -B + sqrt(B*B - 4*A*C) ) / (2*A); /// Only positive root considered
+		Temperature *= Temperature;
+
+		f = A*log(Temperature) + Gas_Constant*log(1/Density -b) - a*sqrt(alpha2(Temperature)) *k*fv/(b*sqrt2*sqrt(Temperature*TstarCrit)) - s;
+		f1= Gas_Constant/(v-b)+ a*sqrt(alpha2(Temperature)) *k/(sqrt(Temperature*TstarCrit)*(v*v - b*b - 2*v*b));
+		dv= f/f1;
+		v-= dv;
+
+		Density = 1/v;
+		Pressure = Density*Temperature*Gas_Constant / (1 - Density*b) - a*alpha2(Temperature) / ( 1/Density/Density + 2*b/Density - b*b );
+
+	}while(dv>toll);
+
+	double e = Temperature*Gas_Constant/Gamma_Minus_One + a*k*(k+1)*fv/(b*sqrt2*sqrt(TstarCrit))*sqrt(Temperature) - a*(k+1)*(k+1)*fv/(b*sqrt2);
+	SetTDState_rhoe(Density, e);
+
 
 }
 
