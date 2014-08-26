@@ -458,8 +458,22 @@ class CFluidProp : public CFluidModel {
 protected:
 	string   ThermoLib, 	   	/*!< \brief Thermodynamic Library (e.g. RefProp, StanMix, vThermo, etc.). */
 	         Fluid; 			/*!< \brief Fluid (e.g. Air, Steam, R134a, Toluene, etc.). */
+	int nComp;                 	/*!< \brief Number of components. */
 	double* Conc;				/*!< \brief Fluid concentration. */
-
+	double
+			P_ref,              /*!< \brief Reference state (assigned). */
+			T_ref,
+			rho_ref,
+			e_ref,
+			v_ref,
+			L_ref;
+	double
+			h_ref,              /*!< \brief Reference state (computed). */
+			s_ref,
+	        dPdrho_e_ref,
+			dPde_rho_ref,
+			dTdrho_e_ref,
+			dTde_rho_ref;
 
 public:
 
@@ -471,7 +485,7 @@ public:
 		/*!
 		 * \brief Constructor of the class.
 		 */
-		CFluidProp(string thermolib, string fluid, double* conc );
+		CFluidProp(string thermolib, string fluid, int ncomp, double* conc );
 
 
 		/*!
@@ -523,6 +537,12 @@ public:
 		 *
 		 */
 		void SetTDState_hs (double h, double s );
+
+		/*!
+		 * \brief Compute non-dimensional state for SU2
+		 */
+		void SetTDState_NonDim ();
+
 
 };
 

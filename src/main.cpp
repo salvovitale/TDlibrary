@@ -23,6 +23,7 @@ int main(int argc, char *argv[]) {
 
 	string  thlib = "RefProp";
 	string  fluid = "Air";
+	int ncomp = 1;
 	double* conc = new double [20];
 	conc[0] = 1.0;
 
@@ -33,7 +34,7 @@ int main(int argc, char *argv[]) {
 	CFluidModel *pr;
 	pr= new CPengRobinson(gamma, r, pcr, tcr, w);
 	CFluidModel *flp;
-	flp= new CFluidProp( thlib, fluid, conc );
+	flp= new CFluidProp( thlib, fluid, ncomp, conc );
 
 	vw->SetTDState_PT(P,T);
 	id->SetTDState_PT(P,T);
