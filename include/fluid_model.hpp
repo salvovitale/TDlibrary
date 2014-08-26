@@ -447,6 +447,84 @@ public:
 };
 
 
+/*!
+ * \class CFluidProp
+ * \brief Child class for defining a fluid model based on FluidProp.
+ * \author: S.Vitale, M.Pini.
+ * \version 3.2.0 "eagle"
+ */
+class CFluidProp : public CFluidModel {
+
+protected:
+	string   ThermoLib, 	   	/*!< \brief Thermodynamic Library (e.g. RefProp, StanMix, vThermo, etc.). */
+	         Fluid; 			/*!< \brief Fluid (e.g. Air, Steam, R134a, Toluene, etc.). */
+	double* Conc;				/*!< \brief Fluid concentration. */
+
+
+public:
+
+	   /*!
+		 * \brief Constructor of the class.
+		 */
+		CFluidProp(void);
+
+		/*!
+		 * \brief Constructor of the class.
+		 */
+		CFluidProp(string thermolib, string fluid, double* conc );
+
+
+		/*!
+		 * \brief Destructor of the class.
+		 */
+		virtual ~CFluidProp(void);
+
+		/*!
+		 * \brief virtual member that would be different for each gas model implemented
+		 * \param[in] InputSpec - Input pair for FLP calls ("e,rho").
+		 * \param[in] rho - first thermodynamic variable.
+		 * \param[in] e - second thermodynamic variable.
+		 */
+
+		void SetTDState_rhoe (double rho, double e );
+
+		/*!
+		 * \brief virtual member that would be different for each gas model implemented
+		 * \param[in] InputSpec - Input pair for FLP calls ("PT").
+		 * \param[in] P - first thermodynamic variable.
+		 * \param[in] T - second thermodynamic variable.
+		 */
+
+		void SetTDState_PT (double P, double T );
+
+		/*!
+		 * \brief virtual member that would be different for each gas model implemented
+		 * \param[in] InputSpec - Input pair for FLP calls ("Prho").
+		 * \param[in] P - first thermodynamic variable.
+		 * \param[in] rho - second thermodynamic variable.
+		 */
+
+		void SetTDState_Prho (double P, double rho );
+
+		/*!
+		 * \brief virtual member that would be different for each gas model implemented
+		 * \param[in] InputSpec - Input pair for FLP calls ("Prho").
+		 * \param[in] P - first thermodynamic variable.
+		 * \param[in] rho - second thermodynamic variable.
+		 */
+
+		void SetEnergy_Prho (double P, double rho );
+
+		/*!
+		 * \brief virtual member that would be different for each gas model implemented
+		 * \param[in] InputSpec - Input pair for FLP calls ("hs").
+		 * \param[in] th1 - first thermodynamic variable (h).
+		 * \param[in] th2 - second thermodynamic variable (s).
+		 *
+		 */
+		void SetTDState_hs (double h, double s );
+
+};
 
 #include "fluid_model.inl"
 
