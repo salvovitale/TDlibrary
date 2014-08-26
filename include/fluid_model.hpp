@@ -450,22 +450,4 @@ public:
 
 #include "fluid_model.inl"
 
-//#include <math.h>
-////#define FACTOR 1.6
-////#define NTRY 50
-//
-//int zbrac(double (*func)(double), double *x1, double *x2) {
-//	int i;
-//	double FACTOR= 1.6;
-//	int NTRY= 50;
-//	double f1,f2;
-//    f1=(*func)(*x1);
-//	f2=(*func)(*x2);
-//	for (i=1;i<=NTRY;i++) {
-//		if (f1*f2 < 0.0) return 1; if (fabs(f1) < fabs(f2))
-//			f1=(*func)(*x1 += FACTOR*(*x1-*x2));
-//		else
-//			f2=(*func)(*x2 += FACTOR*(*x2-*x1));
-//	}
-//return 0;
-//}
+

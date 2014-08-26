@@ -95,8 +95,6 @@ void CVanDerWaalsGas::SetTDState_hs (double h, double s ){
     T = h*Gamma_Minus_One/Gas_Constant/Gamma;
     v = exp(-1/Gamma_Minus_One*log(T) + s/Gas_Constant);
 	do{
-//		cout << T <<" "<< 1/v <<endl;
-//		getchar();
 		f=  log(v-b) - s/Gas_Constant + log(T)/Gamma_Minus_One;
 		f1= 1/(v-b);
 		dv= f/f1;
