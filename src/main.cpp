@@ -9,20 +9,31 @@
 #include <stdio.h>
 #include "math.h"
 #include <cmath>
+#include <stdlib.h>
 #include "../include/fluid_model.hpp"
 using namespace std;
 
+void randInRange(int min, int max, int np, double* number);
+
 int main(int argc, char *argv[]) {
-	double gamma = 1.4;
-	double r = 287.058;
-	double pcr = 3588550.0;
-	double tcr = 131.00;
-	double w= 0.035;
-	double P = 1013250.0;
-	double T = 588.15;
+//	double gamma = 1.4;
+//	double r = 287.058;
+//	double pcr = 3588550.0;
+//	double tcr = 131.00;
+//	double w= 0.035;
+//	double P = 1013250.0;
+//	double T = 588.15;
+
+	double gamma = 1.05;
+	double r = 35.149;
+	double pcr = 1415000.0;
+	double tcr = 564.09;
+	double w= 0.529;
+	double P = 500000.0;
+	double T = 550.00;
 
 	string  thlib = "RefProp";
-	string  fluid = "Air";
+	string  fluid = "MDM";
 	int ncomp = 1;
 	double* conc = new double [20];
 	conc[0] = 1.0;
@@ -61,6 +72,38 @@ int main(int argc, char *argv[]) {
 	cout << "P, T for for Peng Robinson " << pr->GetPressure() << " " << pr->GetTemperature()<< endl;
 	cout <<"-------------------------Hello World------------------------" << endl;
 
+	int np = 10;
+	double* Pvector = new double [np];
+	double* Tvector = new double [np];
+
+	randInRange(P, 2*P, np, Pvector);
+	randInRange(T, T+100, np, Tvector);
+
+    for( int i=0; i<np; i++ ){
+    	for( int j=0; j<np; j++ ){
+    		vw->SetTDState_PT(Pvector[i],Tvector[j]);
+    		id->SetTDState_PT(Pvector[i],Tvector[j]);
+    		pr->SetTDState_PT(Pvector[i],Tvector[j]);
+    		flp->SetTDState_PT(Pvector[i]/pow(10.0,5),Tvector[j]-273.15);
+    		//cout << "rho " << id->GetDensity() << " " << vw->GetDensity() << " " << pr->GetDensity() << " " << flp->GetDensity() << endl;
+    		cout << "c   " << id->GetSoundSpeed() << " " << vw->GetSoundSpeed() << " " << pr->GetSoundSpeed() << " " << flp->GetSoundSpeed() << endl;
+
+    	}
+    }
 
 }
+
+
+void randInRange(int min, int max, int np, double* number)
+{
+  for( int i=0; i<np; i++ )
+  {
+   number[i] = min + ( rand() / (double) RAND_MAX ) * (max - min);
+   //cout << "random number " << number[i] << endl;
+  }
+}
+
+
+
+
 

@@ -102,7 +102,7 @@ void CFluidProp::SetTDState_rhoe (double rho, double e ){
 
 	Pressure = fluidprop_pressure ( pair, v, e );
 	Temperature = fluidprop_temperature ( pair, v, e );
-	SoundSpeed2 = fluidprop_soundspeed ( pair, v, e );
+	SoundSpeed2 = pow( fluidprop_soundspeed ( pair, v, e ), 2);
 	dPdrho_e = 0.0;
 	dPde_rho = 0.0;
 	dTdrho_e = 0.0;
@@ -120,7 +120,7 @@ void CFluidProp::SetTDState_PT (double P, double T ){
 
     Density = fluidprop_density ( pair, P, T );
     StaticEnergy = fluidprop_intenergy ( pair, P, T );
-	SoundSpeed2 = fluidprop_soundspeed ( pair, P, T );
+	SoundSpeed2 = pow( fluidprop_soundspeed ( pair, P, T ),2);
 	dPdrho_e = 0.0;
 	dPde_rho = 0.0;
 	dTdrho_e = 0.0;
@@ -138,7 +138,7 @@ void CFluidProp::SetTDState_Prho (double P, double rho ){
 
     Temperature = fluidprop_temperature ( pair, P, rho );
     StaticEnergy = fluidprop_intenergy ( pair, P, rho );
-	SoundSpeed2 = fluidprop_soundspeed ( pair, P, rho );
+	SoundSpeed2 = pow( fluidprop_soundspeed ( pair, P, rho ),2);
 	dPdrho_e = 0.0;
 	dPde_rho = 0.0;
 	dTdrho_e = 0.0;
@@ -166,7 +166,7 @@ void CFluidProp::SetTDState_hs (double h, double s ){
     Temperature = fluidprop_temperature ( pair, h, s );
     Density = fluidprop_density ( pair, h, s );
     StaticEnergy = h - Pressure/Density;
-	SoundSpeed2 = fluidprop_soundspeed ( pair, h, s );
+	SoundSpeed2 = pow( fluidprop_soundspeed ( pair, h, s ),2);
 	dPdrho_e = 0.0;
 	dPde_rho = 0.0;
 	dTdrho_e = 0.0;
@@ -180,7 +180,7 @@ void CFluidProp::SetTDState_NonDim () {
     Temperature = Temperature/T_ref;
     Density = Density/rho_ref;
     StaticEnergy = StaticEnergy/e_ref;
-	SoundSpeed2 = SoundSpeed2/v_ref;
+	SoundSpeed2 = SoundSpeed2/pow(v_ref,2);
 	dPdrho_e = dPdrho_e/dPdrho_e_ref;
 	dPde_rho = dPde_rho/dPde_rho_ref;
 	dTdrho_e = dTdrho_e/dTdrho_e_ref;
