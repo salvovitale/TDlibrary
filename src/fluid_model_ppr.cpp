@@ -144,9 +144,11 @@ void CPengRobinson::SetTDState_hs (double h, double s ){
 	double f, f1, v;
 	double dv = 1.0;
 	double toll =1e-4;
+
+	v= 1/Density;
+
 	do{
 
-		v= 1/Density;
 		fv = atanh( Density * b * sqrt2/(1 + Density*b));
 		A = Gas_Constant / Gamma_Minus_One;
 		B = a*k*(k+1)*fv/(b*sqrt2*sqrt(TstarCrit));
