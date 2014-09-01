@@ -44,6 +44,7 @@ CFluidProp::CFluidProp(string thermolib, string fluid, int ncomp, double* conc )
 	cout << " " << "\n";
 
 	init_fluidprop();
+	fluidprop_setunits( "SI", " ", " ", " ");
 
 	cout << "------- CHECK FLUIDPROP LIBRARIES -------" << "\n";
 
@@ -103,6 +104,7 @@ void CFluidProp::SetTDState_rhoe (double rho, double e ){
 	Pressure = fluidprop_pressure ( pair, v, e );
 	Temperature = fluidprop_temperature ( pair, v, e );
 	SoundSpeed2 = pow( fluidprop_soundspeed ( pair, v, e ), 2);
+	Entropy = fluidprop_entropy ( pair, v, e );
 	dPdrho_e = 0.0;
 	dPde_rho = 0.0;
 	dTdrho_e = 0.0;
@@ -121,6 +123,7 @@ void CFluidProp::SetTDState_PT (double P, double T ){
     Density = fluidprop_density ( pair, P, T );
     StaticEnergy = fluidprop_intenergy ( pair, P, T );
 	SoundSpeed2 = pow( fluidprop_soundspeed ( pair, P, T ),2);
+	Entropy = fluidprop_entropy ( pair, P, T );
 	dPdrho_e = 0.0;
 	dPde_rho = 0.0;
 	dTdrho_e = 0.0;
@@ -139,6 +142,7 @@ void CFluidProp::SetTDState_Prho (double P, double rho ){
     Temperature = fluidprop_temperature ( pair, P, rho );
     StaticEnergy = fluidprop_intenergy ( pair, P, rho );
 	SoundSpeed2 = pow( fluidprop_soundspeed ( pair, P, rho ),2);
+	Entropy = fluidprop_entropy ( pair, P, rho );
 	dPdrho_e = 0.0;
 	dPde_rho = 0.0;
 	dTdrho_e = 0.0;

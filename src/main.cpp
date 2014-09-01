@@ -1,7 +1,7 @@
 /*!
  * \file main.cpp
  * \brief  this program aims to randomly test and debugging the TD Library for SU2 .
- * \author S.Vitale.
+ * \author S.Vitale, M. Pini
  * \version 1.0
  */
 
